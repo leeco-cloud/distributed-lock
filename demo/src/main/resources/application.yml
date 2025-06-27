@@ -2,7 +2,7 @@ spring:
   application:
     name: lock-redis
   redis:
-    host: localhost
+    host: 120.55.85.22
     port: 6379
     database: 0
 

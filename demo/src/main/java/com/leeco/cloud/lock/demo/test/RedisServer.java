@@ -1,6 +1,6 @@
 package com.leeco.cloud.lock.demo.test;
 
-import com.leeco.cloud.lock.redis.redislock.aop.annotation.RedisLock;
+import com.leeco.cloud.lock.redis.redislock.aop.annotation.Lock;
 import org.springframework.stereotype.Component;
 
 /**
@@ -14,7 +14,7 @@ public class RedisServer {
     /**
      * 将redis锁利用AOP封装成了注解型组件
      */
-    @RedisLock(reentrant = false)
+    @Lock(reentrant = false)
     public void demo(){
         try {
             Thread.sleep(10000);

@@ -1,4 +1,0 @@
-com.leeco.cloud.lock.redis.redislock.aop
-com.leeco.cloud.lock.redis.redislock.aop.annotation
-com.leeco.cloud.lock.redis.redislock.lock
-com.leeco.cloud.lock.redis.redislock.wheel

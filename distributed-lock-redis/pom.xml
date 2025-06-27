@@ -98,6 +98,16 @@
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.11.0</version> <!-- 使用最新版本 -->
+                <configuration>
+                    <source>11</source> <!-- 推荐使用LTS版本：8, 11, 17 -->
+                    <target>11</target>
+                    <release>11</release> <!-- 用于模块化支持 -->
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-gpg-plugin</artifactId>
                 <version>3.2.7</version>
                 <executions>

@@ -1,6 +1,6 @@
 package com.leeco.cloud.lock.redis.redislock.aop;
 
-import com.leeco.cloud.lock.redis.redislock.aop.annotation.RedisLock;
+import com.leeco.cloud.lock.redis.redislock.aop.annotation.Lock;
 import org.springframework.aop.support.StaticMethodMatcherPointcut;
 
 import java.lang.reflect.Method;
@@ -13,7 +13,7 @@ public class RedisLockPointCut extends StaticMethodMatcherPointcut {
 
     @Override
     public boolean matches(Method method, Class<?> targetClass) {
-        RedisLock annotation = method.getAnnotation(RedisLock.class);
+        Lock annotation = method.getAnnotation(Lock.class);
         return annotation != null;
     }
 

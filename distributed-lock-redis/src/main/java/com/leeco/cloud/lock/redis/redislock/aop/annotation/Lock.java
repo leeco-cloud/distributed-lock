@@ -11,7 +11,7 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
-public @interface RedisLock {
+public @interface Lock {
 
     /**
      * 是否可重入 默认不可重入

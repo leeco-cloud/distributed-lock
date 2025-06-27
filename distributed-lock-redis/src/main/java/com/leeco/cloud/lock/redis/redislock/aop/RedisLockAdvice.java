@@ -1,6 +1,6 @@
 package com.leeco.cloud.lock.redis.redislock.aop;
 
-import com.leeco.cloud.lock.redis.redislock.aop.annotation.RedisLock;
+import com.leeco.cloud.lock.redis.redislock.aop.annotation.Lock;
 import com.leeco.cloud.lock.redis.redislock.lock.RedisLockLuaScript;
 import com.leeco.cloud.lock.redis.redislock.lock.RedisLockRefreshDaemon;
 import com.leeco.cloud.lock.redis.redislock.wheel.TimeWheel;
@@ -51,7 +51,7 @@ public class RedisLockAdvice implements MethodInterceptor {
         String hostIp = ip4.getHostAddress();
         Object result = null;
         Exception exception = null;
-        RedisLock annotation = invocation.getMethod().getAnnotation(RedisLock.class);
+        Lock annotation = invocation.getMethod().getAnnotation(Lock.class);
         String uniqueKey = invocation.getThis().getClass() + "::" + invocation.getMethod().getName();
         for(;;) {
             RedisLockRefreshDaemon redisLockRefreshDaemon = tryLock(annotation,uniqueKey,hostIp);
@@ -79,7 +79,7 @@ public class RedisLockAdvice implements MethodInterceptor {
     /**
      * 抢夺锁
      */
-    private RedisLockRefreshDaemon tryLock(RedisLock annotation,String uniqueKey, String hostIp) throws InterruptedException {
+    private RedisLockRefreshDaemon tryLock(Lock annotation,String uniqueKey, String hostIp) throws InterruptedException {
         // 可重入
         if (annotation.reentrant()){
             Long lockState = redisTemplate.execute(RedisLockLuaScript.getReentrantRedisScript(), Collections.singletonList(uniqueKey), hostIp, defaultExpirationTime);
@@ -119,7 +119,7 @@ public class RedisLockAdvice implements MethodInterceptor {
     /**
      * 释放锁
      */
-    private void unLock(RedisLock annotation,String uniqueKey, String hostIp, RedisLockRefreshDaemon redisLockRefreshDaemon) {
+    private void unLock(Lock annotation,String uniqueKey, String hostIp, RedisLockRefreshDaemon redisLockRefreshDaemon) {
         // 可重入
         if (annotation.reentrant()){
             Long unLockState = redisTemplate.execute(RedisLockLuaScript.getReentrantDeleteRedisScript(), Collections.singletonList(uniqueKey), hostIp);

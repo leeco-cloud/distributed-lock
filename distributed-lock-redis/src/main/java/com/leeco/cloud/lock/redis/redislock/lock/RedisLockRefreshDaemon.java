@@ -43,7 +43,7 @@ public class RedisLockRefreshDaemon extends Thread {
 
     @Override
     public void run() {
-        Boolean expire = redisTemplate.expire(lockKey, 5, TimeUnit.SECONDS);
+        Boolean expire = redisTemplate.expire(lockKey, refreshKeyTime, TimeUnit.SECONDS);
         if (expire == null || !expire){
             logger.info("lockKey:" + lockKey + " 续期:" + "失败");
             state = false;

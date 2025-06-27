@@ -24,21 +24,6 @@ public class RedisLockAdvice implements MethodInterceptor {
 
     private final Logger logger = LoggerFactory.getLogger(RedisLockAdvice.class);
 
-    /**
-     * 锁续期时间
-     */
-    private static final int refreshKeyTime = 3;
-
-    /**
-     * 续期次数
-     */
-    private static final int threshold = -1;
-
-    /**
-     * 默认锁过期时间
-     */
-    private static final int defaultExpirationTime = 5;
-
     @Autowired
     private RedisTemplate<Object, Object> redisTemplate;
 
@@ -82,7 +67,7 @@ public class RedisLockAdvice implements MethodInterceptor {
     private RedisLockRefreshDaemon tryLock(Lock annotation,String uniqueKey, String hostIp) throws InterruptedException {
         // 可重入
         if (annotation.reentrant()){
-            Long lockState = redisTemplate.execute(RedisLockLuaScript.getReentrantRedisScript(), Collections.singletonList(uniqueKey), hostIp, defaultExpirationTime);
+            Long lockState = redisTemplate.execute(RedisLockLuaScript.getReentrantRedisScript(), Collections.singletonList(uniqueKey), hostIp, annotation.defaultExpirationTime());
             if (lockState == null || lockState.intValue() == -1){
                 logger.info("===== 未抢占到锁:" + uniqueKey + ",阻塞等待100毫秒后重试 =====");
                 Thread.sleep(100L);
@@ -93,7 +78,7 @@ public class RedisLockAdvice implements MethodInterceptor {
             RedisLockRefreshDaemon redisLockRefreshDaemon;
             if (lockState.intValue() == 1){
                 // 启动守护线程
-                redisLockRefreshDaemon = new RedisLockRefreshDaemon(redisTemplate, uniqueKey,threshold,refreshKeyTime);
+                redisLockRefreshDaemon = new RedisLockRefreshDaemon(redisTemplate, uniqueKey, annotation.threshold(), annotation.refreshKeyTime());
                 timeWheel.addJob(redisLockRefreshDaemon);
             }else{
                 redisLockRefreshDaemon = timeWheel.getDaemon(uniqueKey);
@@ -101,7 +86,7 @@ public class RedisLockAdvice implements MethodInterceptor {
             return redisLockRefreshDaemon;
         }else{
             // 不可重入
-            Boolean lockState = redisTemplate.execute(RedisLockLuaScript.getDefaultRedisScript(), Collections.singletonList(uniqueKey), hostIp, defaultExpirationTime);
+            Boolean lockState = redisTemplate.execute(RedisLockLuaScript.getDefaultRedisScript(), Collections.singletonList(uniqueKey), hostIp, annotation.defaultExpirationTime());
             if (lockState == null || !lockState){
                 logger.info("===== 未抢占到锁:" + uniqueKey + ",阻塞等待100毫秒后重试 =====");
                 Thread.sleep(100L);
@@ -110,7 +95,7 @@ public class RedisLockAdvice implements MethodInterceptor {
             // 抢占到锁
             logger.info("===== 抢占锁成功 =====");
             // 启动守护线程
-            RedisLockRefreshDaemon redisLockRefreshDaemon = new RedisLockRefreshDaemon(redisTemplate, uniqueKey,threshold,refreshKeyTime);
+            RedisLockRefreshDaemon redisLockRefreshDaemon = new RedisLockRefreshDaemon(redisTemplate, uniqueKey, annotation.threshold(), annotation.refreshKeyTime());
             timeWheel.addJob(redisLockRefreshDaemon);
             return redisLockRefreshDaemon;
         }

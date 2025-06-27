@@ -18,4 +18,23 @@ public @interface Lock {
      */
     boolean reentrant() default false;
 
+    /**
+     * 首次上锁 锁过期时间(单位:秒)
+     * 默认3秒
+     */
+    int defaultExpirationTime() default 3;
+
+    /**
+     * 续期次数 默认-1
+     * -1:无限续期
+     * 0 :不续期
+     */
+    int threshold() default -1;
+
+    /**
+     * 锁续期时间(单位:秒)
+     * 默认3秒
+     */
+    int refreshKeyTime() default 3;
+
 }

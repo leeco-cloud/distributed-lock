@@ -3,9 +3,9 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>io.github.leeco-cloud</groupId>
+    <groupId>com.dreams-summer</groupId>
     <artifactId>distributed-lock</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.0</version>
     <packaging>jar</packaging>
     <name>distributed-lock</name>
     <description>distributed-lock</description>
